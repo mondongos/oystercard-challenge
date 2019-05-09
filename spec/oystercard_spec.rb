@@ -64,10 +64,41 @@ describe Oystercard do
   end
 
   describe 'journey details' do
-    it 'stores starting station' do
+    it 'checks if the entry station is provided' do
       subject.top_up(20)
-      station = "Aldgate East"
       expect(subject).to respond_to(:touch_in).with(1).argument
+    end
+
+    it 'stores entry station' do
+      subject.top_up(20)
+      subject.touch_in("Algate East")
+
+      expect(subject.entry_station).to eq("Algate East")
+    end
+
+    it 'checks if the exit station is provided' do
+      subject.top_up(20)
+      subject.touch_in
+
+      expect(subject).to respond_to(:touch_out).with(1).argument
+    end
+
+    it 'stores exit station' do
+      subject.top_up(20)
+      subject.touch_in("Algate East")
+      subject.touch_out("Bank")
+
+      expect(subject.exit_station).to eq("Bank")
+    end
+  end
+
+  describe 'journey history' do
+    it 'is in stored in instance variable' do
+      subject.top_up(20)
+      subject.touch_in("Algate East")
+      subject.touch_out("Bank")
+
+      expect(subject.journey_history).to eq([{:entry_station => "Algate East", :exit_station => "Bank"}])
     end
   end
 
