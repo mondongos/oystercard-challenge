@@ -1,6 +1,8 @@
 require 'oystercard'
 
 describe Oystercard do
+  let(:entry_station) { :entry_station }
+  let(:exit_station) { :exit_station }
 
   it "has a balance" do
     expect(subject.balance).to eq(0)
@@ -18,6 +20,7 @@ describe Oystercard do
 
   describe 'touch functionality' do
     subject { Oystercard.new(5) }
+
 
     it 'is initially not in a journey' do
       expect(subject).not_to be_in_journey
@@ -71,9 +74,9 @@ describe Oystercard do
 
     it 'stores entry station' do
       subject.top_up(20)
-      subject.touch_in("Algate East")
+          subject.touch_in(:entry_station)
 
-      expect(subject.entry_station).to eq("Algate East")
+      expect(subject.entry_station).to eq(:entry_station)
     end
 
     it 'checks if the exit station is provided' do
@@ -85,20 +88,19 @@ describe Oystercard do
 
     it 'stores exit station' do
       subject.top_up(20)
-      subject.touch_in("Algate East")
-      subject.touch_out("Bank")
+      subject.touch_in(:entry_station)
+      subject.touch_out(:exit_station)
 
-      expect(subject.exit_station).to eq("Bank")
+      expect(subject.exit_station).to eq(:exit_station)
     end
   end
 
   describe 'journey history' do
     it 'is in stored in instance variable' do
       subject.top_up(20)
-      subject.touch_in("Algate East")
-      subject.touch_out("Bank")
-
-      expect(subject.journey_history).to eq([{:entry_station => "Algate East", :exit_station => "Bank"}])
+      subject.touch_in(:entry_station)
+      subject.touch_out(:exit_station)
+      expect(subject.journey_history).to eq([{:entry_station => :entry_station, :exit_station => :exit_station}])
     end
   end
 
