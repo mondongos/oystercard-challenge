@@ -24,11 +24,14 @@ describe Oystercard do
     end
 
     it 'allows customer to tap-in' do
-      expect(subject.touch_in).to eq(true)
+      subject.touch_in
+      expect(subject).to be_in_journey
     end
 
     it 'allow customer to tap-out' do
-      expect(subject.touch_out).to eq(false)
+      subject.touch_in
+      subject.touch_out
+      expect(subject).not_to be_in_journey
     end
 
     it 'checks if card is in use' do
@@ -40,6 +43,12 @@ describe Oystercard do
       subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+
+    it "sets entry station to nil on touch-out" do
+      subject.touch_in
+      subject.touch_out
+      expect(subject.entry_station).to eq(nil)
     end
   end
 
@@ -59,7 +68,6 @@ describe Oystercard do
       subject.top_up(20)
       station = "Aldgate East"
       expect(subject).to respond_to(:touch_in).with(1).argument
-      # expect(subject.touch_in(station)).to eq(true)
     end
   end
 
